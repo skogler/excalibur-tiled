@@ -5,6 +5,7 @@ import {
    TileMap,
    TileSprite,
    SpriteSheet,
+   SpriteSheetArgs,
    Logger
 } from 'excalibur';
 import { ITiledMap, ITiledTileSet } from './ITiledMap';
@@ -149,9 +150,15 @@ export class TiledResource extends Resource<ITiledMap> {
 
       // register sprite sheets for each tileset in map
       for (var ts of this.data.tilesets) {
-         var cols = Math.floor(ts.imagewidth / ts.tilewidth);
-         var rows = Math.floor(ts.imageheight / ts.tileheight);
-         var ss = new SpriteSheet(ts.imageTexture, cols, rows, ts.tilewidth, ts.tileheight);
+         const args : SpriteSheetArgs = {
+            'image': ts.imageTexture,
+            'columns': (ts.imagewidth - 2 * ts.margin + ts.spacing) / (ts.tilewidth + ts.spacing),
+            'rows': (ts.imageheight - 2 * ts.margin + ts.spacing) / (ts.tileheight + ts.spacing),
+            'spWidth': ts.tilewidth,
+            'spHeight': ts.tileheight,
+            'spacing': ts.spacing
+         };
+         var ss = new SpriteSheet(args);
 
          map.registerSpriteSheet(ts.firstgid.toString(), ss);
       }
